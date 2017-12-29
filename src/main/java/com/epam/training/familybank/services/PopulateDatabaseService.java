@@ -28,15 +28,15 @@ public class PopulateDatabaseService {
         User user1 = createUser("Newton", "Scamander");
         User user2 = createUser("Credence", "Barebone");
         User user3 = createUser("Porpetina", "Goldstein");
-        Account current1 = createAccount(user1.getId(), AccountType.CURRENT, new BigDecimal("2000"));
-        Account savings1 = createAccount(user1.getId(), AccountType.SAVINGS, BigDecimal.ZERO);
-        Account credit1 = createAccount(user1.getId(), AccountType.CREDIT, BigDecimal.ZERO);
-        Account current2 = createAccount(user2.getId(), AccountType.CURRENT, new BigDecimal("2000"));
-        Account savings2 = createAccount(user2.getId(), AccountType.SAVINGS, BigDecimal.ZERO);
-        Account credit2 = createAccount(user2.getId(), AccountType.CREDIT, BigDecimal.ZERO);
-        Account current3 = createAccount(user3.getId(), AccountType.CURRENT, new BigDecimal("2000"));
-        Account savings3 = createAccount(user3.getId(), AccountType.SAVINGS, BigDecimal.ZERO);
-        Account credit3 = createAccount(user3.getId(), AccountType.CREDIT, BigDecimal.ZERO);
+        Account current1 = createAccount(user1, AccountType.CURRENT, new BigDecimal("2000"));
+        Account savings1 = createAccount(user1, AccountType.SAVINGS, BigDecimal.ZERO);
+        Account credit1 = createAccount(user1, AccountType.CREDIT, BigDecimal.ZERO);
+        Account current2 = createAccount(user2, AccountType.CURRENT, new BigDecimal("2000"));
+        Account savings2 = createAccount(user2, AccountType.SAVINGS, BigDecimal.ZERO);
+        Account credit2 = createAccount(user2, AccountType.CREDIT, BigDecimal.ZERO);
+        Account current3 = createAccount(user3, AccountType.CURRENT, new BigDecimal("2000"));
+        Account savings3 = createAccount(user3, AccountType.SAVINGS, BigDecimal.ZERO);
+        Account credit3 = createAccount(user3, AccountType.CREDIT, BigDecimal.ZERO);
         txManager.commit(status);
     }
 
@@ -48,8 +48,8 @@ public class PopulateDatabaseService {
         return user;
     }
     
-    private Account createAccount(int userId, AccountType accountType, BigDecimal balance) {
-        Account account = new Account(userId, accountType);
+    private Account createAccount(User user, AccountType accountType, BigDecimal balance) {
+        Account account = new Account(user, accountType);
         account.setBalance(balance);
         entityManager.persist(account);
         return account;

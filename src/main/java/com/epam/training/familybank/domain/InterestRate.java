@@ -3,6 +3,8 @@ package com.epam.training.familybank.domain;
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity
 public enum InterestRate {
@@ -10,7 +12,12 @@ public enum InterestRate {
     CREDIT("0.002"),
     SAVINGS("0.001");
     
-    private final BigDecimal value;
+    @Id
+    @GeneratedValue
+    private int id;
+    private BigDecimal value;
+    
+    private InterestRate() {}
     
     private InterestRate(String value) {
         this.value = new BigDecimal(value);

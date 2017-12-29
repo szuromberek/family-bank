@@ -7,52 +7,38 @@ import java.util.List;
 import com.epam.training.familybank.dao.AccountDao;
 import com.epam.training.familybank.domain.Account;
 import com.epam.training.familybank.domain.AccountType;
+import com.epam.training.familybank.domain.User;
 
 public class JpaAccountDao extends GenericJpaDao implements AccountDao {
 
     public List<Account> queryAccountsByType(AccountType accountType) {
         List<Account> accounts = entityManager
-                .createQuery("select a from Account a join fetch a.Id"
-                        + "and a.accountType = :accountType", Account.class)
+                .createQuery("select a from Account a where a.accountType = :accountType", Account.class)
                 .setParameter("accountType", accountType)
                 .getResultList();
         return accounts;
     }
     
-    public Account queryCurrentAccountByUserId(int userId) {
-        return queryAccountByUserIdAndAccountType(userId, AccountType.CURRENT);
+    public Account queryCurrentAccountByUser(User user) {
+        return queryAccountByUserIdAndAccountType(user, AccountType.CURRENT);
     }
     
-    public Account queryCreditAccountByUserId(int userId) {
-        return queryAccountByUserIdAndAccountType(userId, AccountType.CREDIT);
+    public Account queryCreditAccountByUser(User user) {
+        return queryAccountByUserIdAndAccountType(user, AccountType.CREDIT);
     }
     
-    public Account querySavingsAccountByUserId(int userId) {
-        return queryAccountByUserIdAndAccountType(userId, AccountType.SAVINGS);
+    public Account querySavingsAccountByUser(User user) {
+        return queryAccountByUserIdAndAccountType(user, AccountType.SAVINGS);
     }
 
-    private Account queryAccountByUserIdAndAccountType(int userId, AccountType accountType) {
+    private Account queryAccountByUserIdAndAccountType(User user, AccountType accountType) {
         List<Account> accounts = entityManager
-              .createQuery("select a from Account a join fetch a.Id"
-                      + "where a.userId = :userId"
-                      + "and a.accountType = :accountType", Account.class)
-              .setParameter("userId", userId)
+              .createQuery("select a from Account a where a.user = :user and a.accountType = :accountType", Account.class)
+              .setParameter("user", user)
               .setParameter("accountType", accountType)
               .getResultList();
       return accounts.get(0);
-    }
-
-    public BigDecimal queryCurrentAccountBalanceByUserId(int userId) {
-        List<Account> accounts = entityManager
-                .createQuery("select a from Account a join fetch a.balance"
-                        + "where a.userId = :userId"
-                        + "and a.accountType = :accountType", Account.class)
-                .setParameter("userId", userId)
-                .setParameter("accountType", AccountType.CURRENT)
-                .getResultList();
-        return accounts.get(0).getBalance();
-    }
-    
+    }  
     
     public BigDecimal queryAmountAvailableToLend() {
         BigDecimal sum = (BigDecimal) entityManager
@@ -70,22 +56,6 @@ public class JpaAccountDao extends GenericJpaDao implements AccountDao {
         return sum;
     }
     
-//    public List<BigDecimal> queryDebitBalances() {
-//        List<BigDecimal> balances = entityManager
-//                .createQuery("select a.balance from Account a where a.accountType = :accountType", BigDecimal.class)
-//                .setParameter("accountType", AccountType.DEBIT)
-//                .getResultList();
-//        return balances;
-//    }
-//    
-//    public List<BigDecimal> queryCreditBalances() {
-//        List<BigDecimal> balances = entityManager
-//                .createQuery("select a.balance from Account a where a.accountType = :accountType", BigDecimal.class)
-//                .setParameter("accountType", AccountType.CREDIT)
-//                .getResultList();
-//        return balances;
-//    }
-    
     public void updateBalance(Account account, BigDecimal balance) {
         entityManager
             .createQuery("update Account a set a.balance = :balance where a.id = :accountId")
@@ -93,14 +63,6 @@ public class JpaAccountDao extends GenericJpaDao implements AccountDao {
             .setParameter("accountId", account.getId())
             .executeUpdate();
     }
-
-//    public Date queryInterestCalculatedDate(Account account) {
-//        List<Account> accounts = entityManager
-//                .createQuery("select a from Account a join fetch a.interestCalculatedDate where a.id = :accountId", Account.class)
-//                .setParameter("accountId", account.getId())
-//                .getResultList();
-//        return accounts.get(0).getInterestCalculatedDate();
-//    }
 
     public void updateInterestCalculatedDate(Account account) {
         entityManager

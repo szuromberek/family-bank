@@ -1,6 +1,8 @@
 package com.epam.training.familybank.services;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -8,6 +10,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import com.epam.training.familybank.dao.jpaimpl.JpaAccountDao;
 import com.epam.training.familybank.domain.Account;
+import com.epam.training.familybank.domain.AccountType;
 import com.epam.training.familybank.domain.User;
 
 public class AccountService {
@@ -17,6 +20,17 @@ public class AccountService {
 
     public AccountService(JpaAccountDao jpaAccountDao) {
         this.jpaAccountDao = jpaAccountDao;
+    }
+    
+    public List<Account> listAllAccounts() {
+        List<Account> allAccounts = new ArrayList<>();
+        List<Account> currentAccounts = jpaAccountDao.queryAccountsByType(AccountType.CURRENT);
+        List<Account> creditAccounts = jpaAccountDao.queryAccountsByType(AccountType.CREDIT);
+        List<Account> savingsAccounts = jpaAccountDao.queryAccountsByType(AccountType.SAVINGS);
+        allAccounts.addAll(currentAccounts);
+        allAccounts.addAll(creditAccounts);
+        allAccounts.addAll(savingsAccounts);
+        return allAccounts;
     }
 
     public void sendGift(User fromUser, User toUser, BigDecimal amount) {
@@ -82,15 +96,15 @@ public class AccountService {
     }
     
     private Account getCurrentAccount(User user) {
-        return jpaAccountDao.queryCurrentAccountByUserId(user.getId());
+        return jpaAccountDao.queryCurrentAccountByUser(user);
     }
 
     private Account getCreditAccount(User user) {
-        return jpaAccountDao.queryCreditAccountByUserId(user.getId());
+        return jpaAccountDao.queryCreditAccountByUser(user);
     }
 
     private Account getSavingsAccount(User user) {
-        return jpaAccountDao.querySavingsAccountByUserId(user.getId());
+        return jpaAccountDao.querySavingsAccountByUser(user);
     }
 
 }

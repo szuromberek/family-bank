@@ -21,6 +21,4 @@ public class SpringConfigurationJpa {
     public JpaTransactionManager transactionManager() {
         return new JpaTransactionManager(entityManagerFactory().getObject());
     }
-    
-
 }
