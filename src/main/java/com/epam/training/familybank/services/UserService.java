@@ -11,14 +11,12 @@ import com.epam.training.familybank.domain.User;
 
 public class UserService {
     public JpaUserDao jpaUserDao;
-    @Resource
-    public PlatformTransactionManager txManager;
 
     public UserService(JpaUserDao jpaUserDao) {
         this.jpaUserDao = jpaUserDao;
     }
     
-    public List<User> listUsers() {
+    public List<User> getUsers() {
         return jpaUserDao.queryAllUsers();
     }
 }

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,7 +17,7 @@ public class Account {
     private int id;
     @ManyToOne
     private User user;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private AccountType accountType;
     private BigDecimal balance;
     Date interestCalculatedDate;
@@ -27,8 +28,6 @@ public class Account {
     public Account(User user, AccountType accountType) {
         this.user = user;
         this.accountType = accountType;
-        this.balance = BigDecimal.ZERO;
-        this.interestCalculatedDate = new Date();
     }
 
     public int getId() {

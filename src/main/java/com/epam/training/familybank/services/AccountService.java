@@ -7,6 +7,8 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.epam.training.familybank.dao.jpaimpl.JpaAccountDao;
 import com.epam.training.familybank.domain.Account;
@@ -14,23 +16,13 @@ import com.epam.training.familybank.domain.AccountType;
 import com.epam.training.familybank.domain.User;
 
 public class AccountService {
-    public JpaAccountDao jpaAccountDao;
+    private final JpaAccountDao jpaAccountDao;
+    
     @Resource
-    public PlatformTransactionManager txManager;
+    private PlatformTransactionManager txManager;
 
     public AccountService(JpaAccountDao jpaAccountDao) {
         this.jpaAccountDao = jpaAccountDao;
-    }
-    
-    public List<Account> listAllAccounts() {
-        List<Account> allAccounts = new ArrayList<>();
-        List<Account> currentAccounts = jpaAccountDao.queryAccountsByType(AccountType.CURRENT);
-        List<Account> creditAccounts = jpaAccountDao.queryAccountsByType(AccountType.CREDIT);
-        List<Account> savingsAccounts = jpaAccountDao.queryAccountsByType(AccountType.SAVINGS);
-        allAccounts.addAll(currentAccounts);
-        allAccounts.addAll(creditAccounts);
-        allAccounts.addAll(savingsAccounts);
-        return allAccounts;
     }
 
     public void sendGift(User fromUser, User toUser, BigDecimal amount) {
@@ -72,8 +64,10 @@ public class AccountService {
     }
 
     private void transferFundsBetweenAccounts(BigDecimal amount, Account fromAccount, Account toAccount) {
+        TransactionStatus status = txManager.getTransaction(new DefaultTransactionDefinition());
         withdrawFundsFromAccount(amount, fromAccount);
         depositFundsToAccount(amount, toAccount);
+        txManager.commit(status);
     }
     
     private void depositFundsToAccount(BigDecimal amount, Account account) {
@@ -89,8 +83,8 @@ public class AccountService {
     }
     
     private boolean sufficientBankFundsAvailable(BigDecimal amount) {
-        BigDecimal allSavedAmount = jpaAccountDao.queryAmountAvailableToLend();
-        BigDecimal allLentAmount = jpaAccountDao.queryAmountOnLoan();
+        BigDecimal allSavedAmount = jpaAccountDao.queryAllSavedAmount();
+        BigDecimal allLentAmount = jpaAccountDao.queryAllLentAmount();
         BigDecimal borrowable = allSavedAmount.subtract(allLentAmount);
         return borrowable.compareTo(amount) >= 0;
     }

@@ -26,7 +26,7 @@ public class SpringConfigurationService {
         return new UserService(jpaUserDao);
     }
     
-    @Bean(initMethod = "populateDatabase")
+    //@Bean(initMethod = "populateDatabase")
     public PopulateDatabaseService populateDatabaseService() {
         return new PopulateDatabaseService();
     }

@@ -1,6 +1,7 @@
 package com.epam.training.familybank.services;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -51,6 +52,7 @@ public class PopulateDatabaseService {
     private Account createAccount(User user, AccountType accountType, BigDecimal balance) {
         Account account = new Account(user, accountType);
         account.setBalance(balance);
+        account.setInterestCalculatedDate(new Date());
         entityManager.persist(account);
         return account;
     }

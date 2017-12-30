@@ -8,6 +8,8 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.epam.training.familybank.dao.jpaimpl.JpaAccountDao;
 import com.epam.training.familybank.domain.Account;
@@ -16,29 +18,34 @@ import com.epam.training.familybank.domain.InterestRate;
 
 public class InterestService {
     public JpaAccountDao jpaAccountDao;
+    
     @Resource
-    public PlatformTransactionManager txManager;
+    private PlatformTransactionManager txManager;
 
     public InterestService(JpaAccountDao jpaAccountDao) {
         this.jpaAccountDao = jpaAccountDao;
     }
     
     public void accountCreditAndSavingsInterest() {
-        accountInterest(AccountType.SAVINGS, AccountType.SAVINGS.getInterestRate());
-        accountInterest(AccountType.CREDIT, AccountType.CREDIT.getInterestRate());
+        TransactionStatus status = txManager.getTransaction(new DefaultTransactionDefinition());
+        accountInterest(AccountType.SAVINGS);
+        accountInterest(AccountType.CREDIT);
+        txManager.commit(status);
     }
 
-    private void accountInterest(AccountType accountType, InterestRate interestRate) {
+    private void accountInterest(AccountType accountType) {
         List<Account> accounts = jpaAccountDao.queryAccountsByType(accountType);
         for(Account account : accounts) {
             BigDecimal balance = account.getBalance();
-            BigDecimal rate = interestRate.getValue();
-            BigDecimal oneDayInterest = balance.add(balance).multiply(rate);
+            BigDecimal rate = accountType.getInterestRate().getValue();
+            BigDecimal oneDayInterest = balance.multiply(rate);
             Date lastInterestCalculatedDate = account.getInterestCalculatedDate();
-            BigDecimal numberOfDays = BigDecimal.valueOf(calculateInterestPeriod(lastInterestCalculatedDate));
-            BigDecimal newBalance = oneDayInterest.multiply(numberOfDays); 
-            jpaAccountDao.updateBalance(account, newBalance);
-            jpaAccountDao.updateInterestCalculatedDate(account);
+            long numberOfDays = calculateInterestPeriod(lastInterestCalculatedDate);
+            if(numberOfDays > 0) {
+                BigDecimal newBalance = balance.add(oneDayInterest.multiply(BigDecimal.valueOf(numberOfDays)));
+                jpaAccountDao.updateBalance(account, newBalance);
+                jpaAccountDao.updateInterestCalculatedDate(account, new Date());
+            }
         }
     }
     
