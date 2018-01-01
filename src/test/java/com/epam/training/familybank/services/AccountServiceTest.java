@@ -13,11 +13,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.epam.training.familybank.dao.jpaimpl.JpaAccountDao;
 import com.epam.training.familybank.domain.Account;
 import com.epam.training.familybank.domain.User;
 
+@Transactional
 public class AccountServiceTest {
     private JpaAccountDao mockJpaAccountDao;
     private AccountService underTest;
@@ -57,6 +59,30 @@ public class AccountServiceTest {
         // Then
         verify(mockJpaAccountDao).updateBalance(mockFromAccount, amountToSend);
         verify(mockJpaAccountDao).updateBalance(mockToAccount, amountToSend);
+    }
+    
+    @Test
+    public void testInsufficientFundsExceptionThrownWhenSendGiftCalled() {
+        // Given
+        Account mockFromAccount = mock(Account.class);
+        Account mockToAccount = mock(Account.class);
+        User mockFromUser = mock(User.class);
+        User mockToUser = mock(User.class);
+        BigDecimal amountToSend = BigDecimal.valueOf(500);
+        BigDecimal firstUserBalance = BigDecimal.valueOf(100);
+        BigDecimal secondUserBalance = BigDecimal.ZERO;
+        when(mockJpaAccountDao.queryCurrentAccountByUser(mockFromUser)).thenReturn(mockFromAccount);
+        when(mockJpaAccountDao.queryCurrentAccountByUser(mockToUser)).thenReturn(mockToAccount);
+        when(mockFromAccount.getBalance()).thenReturn(firstUserBalance);
+        when(mockToAccount.getBalance()).thenReturn(secondUserBalance);
+        try {
+        // When
+            underTest.sendGift(mockFromUser, mockToUser, amountToSend);
+        // Then
+            fail();
+        } catch (InsufficientFundsException expected) {
+            assertEquals("Insufficient account balance for transaction.", expected.getMessage());
+        }
     }
     
     @Test

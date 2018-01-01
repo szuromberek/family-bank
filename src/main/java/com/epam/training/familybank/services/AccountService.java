@@ -16,7 +16,7 @@ public class AccountService {
     private final JpaAccountDao jpaAccountDao;
     
     @Resource
-    private PlatformTransactionManager platformTransactionManager;
+    private PlatformTransactionManager txManager;
 
     public AccountService(JpaAccountDao jpaAccountDao) {
         this.jpaAccountDao = jpaAccountDao;
@@ -61,10 +61,10 @@ public class AccountService {
     }
 
     private void transferFundsBetweenAccounts(Account fromAccount, Account toAccount, BigDecimal amount) {
-        TransactionStatus status = platformTransactionManager.getTransaction(new DefaultTransactionDefinition());
+        TransactionStatus status = txManager.getTransaction(new DefaultTransactionDefinition());
         decreaseBalanceByAmount(fromAccount, amount);
         increaseBalanceByAmount(toAccount, amount);
-        platformTransactionManager.commit(status);
+        txManager.commit(status);
     }
     
     private void increaseBalanceByAmount(Account account, BigDecimal amount) {
