@@ -45,7 +45,7 @@ public class JpaAccountDao extends GenericJpaDao implements AccountDao {
       return accounts.get(0);
     }  
     
-    public BigDecimal queryAllSavedAmount() {
+    public BigDecimal queryTotalSavedAmount() {
         BigDecimal sum = (BigDecimal) entityManager
                 .createQuery("select sum(a.balance) from Account a where a.accountType = :accountType")
                 .setParameter("accountType", AccountType.SAVINGS)
@@ -53,7 +53,7 @@ public class JpaAccountDao extends GenericJpaDao implements AccountDao {
         return sum;
     }
     
-    public BigDecimal queryAllLentAmount() {
+    public BigDecimal queryTotalLentAmount() {
         BigDecimal sum = (BigDecimal) entityManager
                 .createQuery("select sum(a.balance) from Account a where a.accountType = :accountType")
                 .setParameter("accountType", AccountType.CREDIT)
@@ -61,11 +61,11 @@ public class JpaAccountDao extends GenericJpaDao implements AccountDao {
         return sum;
     }
     
-    public void updateBalance(Account account, BigDecimal balance) {
+    public void updateBalance(Account account, BigDecimal newBalance) {
         TransactionStatus status = txManager.getTransaction(new DefaultTransactionDefinition());
         entityManager
-            .createQuery("update Account a set a.balance = :balance where a.id = :accountId")
-            .setParameter("balance", balance)
+            .createQuery("update Account a set a.balance = :newBalance where a.id = :accountId")
+            .setParameter("newBalance", newBalance)
             .setParameter("accountId", account.getId())
             .executeUpdate();
         txManager.commit(status);

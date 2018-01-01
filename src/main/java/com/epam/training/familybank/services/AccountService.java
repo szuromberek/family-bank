@@ -1,8 +1,6 @@
 package com.epam.training.familybank.services;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -12,14 +10,13 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.epam.training.familybank.dao.jpaimpl.JpaAccountDao;
 import com.epam.training.familybank.domain.Account;
-import com.epam.training.familybank.domain.AccountType;
 import com.epam.training.familybank.domain.User;
 
 public class AccountService {
     private final JpaAccountDao jpaAccountDao;
     
     @Resource
-    private PlatformTransactionManager txManager;
+    private PlatformTransactionManager platformTransactionManager;
 
     public AccountService(JpaAccountDao jpaAccountDao) {
         this.jpaAccountDao = jpaAccountDao;
@@ -28,53 +25,53 @@ public class AccountService {
     public void sendGift(User fromUser, User toUser, BigDecimal amount) {
         Account fromAccount = getCurrentAccount(fromUser);
         Account toAccount = getCurrentAccount(toUser);
-        transferFundsBetweenAccounts(amount, fromAccount, toAccount);
+        transferFundsBetweenAccounts(toAccount, fromAccount, amount);
     }
 
     public void putMoneyInBank(User user, BigDecimal amount) {
-        depositFundsToAccount(amount, getCurrentAccount(user));
+        increaseBalanceByAmount(getCurrentAccount(user), amount);
     }
     
     public void takeMoneyOutOfBank(User user, BigDecimal amount) {
-        withdrawFundsFromAccount(amount, getCurrentAccount(user));
+        decreaseBalanceByAmount(getCurrentAccount(user), amount);
     }
     
     public void getLoan(User user, BigDecimal amount) {
         if(sufficientBankFundsAvailable(amount)) {
-            depositFundsToAccount(amount, getCreditAccount(user));
+            increaseBalanceByAmount(getCreditAccount(user), amount);
         } else {
             throw new InsufficientFundsException("Insufficient bank funds for transaction.");
         }
     }
     
     public void repayLoan(User user, BigDecimal amount) {
-        withdrawFundsFromAccount(amount, getCreditAccount(user));
+        decreaseBalanceByAmount(getCreditAccount(user), amount);
     }
     
     public void increaseSavings(User user, BigDecimal amount) {
         Account currentAccount = getCurrentAccount(user);
         Account savingsAccount = getSavingsAccount(user);
-        transferFundsBetweenAccounts(amount, currentAccount, savingsAccount);
+        transferFundsBetweenAccounts(currentAccount, savingsAccount, amount);
     }
     
     public void decreaseSavings(User user, BigDecimal amount) {
         Account currentAccount = getCurrentAccount(user);
         Account savingsAccount = getSavingsAccount(user);
-        transferFundsBetweenAccounts(amount, savingsAccount, currentAccount);
+        transferFundsBetweenAccounts(savingsAccount, currentAccount, amount);
     }
 
-    private void transferFundsBetweenAccounts(BigDecimal amount, Account fromAccount, Account toAccount) {
-        TransactionStatus status = txManager.getTransaction(new DefaultTransactionDefinition());
-        withdrawFundsFromAccount(amount, fromAccount);
-        depositFundsToAccount(amount, toAccount);
-        txManager.commit(status);
+    private void transferFundsBetweenAccounts(Account fromAccount, Account toAccount, BigDecimal amount) {
+        TransactionStatus status = platformTransactionManager.getTransaction(new DefaultTransactionDefinition());
+        decreaseBalanceByAmount(fromAccount, amount);
+        increaseBalanceByAmount(toAccount, amount);
+        platformTransactionManager.commit(status);
     }
     
-    private void depositFundsToAccount(BigDecimal amount, Account account) {
+    private void increaseBalanceByAmount(Account account, BigDecimal amount) {
         jpaAccountDao.updateBalance(account, account.getBalance().add(amount));
     }
     
-    private void withdrawFundsFromAccount(BigDecimal amount, Account account) {
+    private void decreaseBalanceByAmount(Account account, BigDecimal amount) {
         if(account.getBalance().compareTo(amount) >= 0) {
             jpaAccountDao.updateBalance(account, account.getBalance().subtract(amount));
         } else {
@@ -83,9 +80,9 @@ public class AccountService {
     }
     
     private boolean sufficientBankFundsAvailable(BigDecimal amount) {
-        BigDecimal allSavedAmount = jpaAccountDao.queryAllSavedAmount();
-        BigDecimal allLentAmount = jpaAccountDao.queryAllLentAmount();
-        BigDecimal borrowable = allSavedAmount.subtract(allLentAmount);
+        BigDecimal totalSavedAmount = jpaAccountDao.queryTotalSavedAmount();
+        BigDecimal totalLentAmount = jpaAccountDao.queryTotalLentAmount();
+        BigDecimal borrowable = totalSavedAmount.subtract(totalLentAmount);
         return borrowable.compareTo(amount) >= 0;
     }
     

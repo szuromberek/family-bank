@@ -21,14 +21,7 @@ public class Account {
     private AccountType accountType;
     private BigDecimal balance;
     Date interestCalculatedDate;
-    
-    public Account() {
-    }
 
-    public Account(User user, AccountType accountType) {
-        this.user = user;
-        this.accountType = accountType;
-    }
 
     public int getId() {
         return id;
@@ -37,9 +30,17 @@ public class Account {
     public User getUser() {
         return user;
     }
+    
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public AccountType getAccountType() {
         return accountType;
+    }
+    
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
     }
 
     public BigDecimal getBalance() {
@@ -63,4 +64,5 @@ public class Account {
         return "Account [id=" + id + ", user=" + user + ", accountType=" + accountType + ", balance=" + balance + ", interestCalculatedDate="
                 + interestCalculatedDate + "]";
     }
+
 }

@@ -13,9 +13,9 @@ public interface AccountDao {
     Account queryCurrentAccountByUser(User user);
     Account queryCreditAccountByUser(User user);
     Account querySavingsAccountByUser(User user);
-    BigDecimal queryAllSavedAmount();
-    BigDecimal queryAllLentAmount();
-    void updateBalance(Account account, BigDecimal balance);
+    BigDecimal queryTotalSavedAmount();
+    BigDecimal queryTotalLentAmount();
+    void updateBalance(Account account, BigDecimal newBalance);
     public void updateInterestCalculatedDate(Account account, Date date);
     void save(Account account);
 }

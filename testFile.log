@@ -4428,3 +4428,88 @@ Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Table 'fam
 1673 [main] INFO  o.hibernate.tuple.PojoInstantiator - HHH000182: No default (no-argument) constructor for class: com.epam.training.familybank.domain.AccountType (class must be instantiated by Interceptor)
 2064 [main] INFO  o.h.h.i.QueryTranslatorFactoryInitiator - HHH000397: Using ASTQueryTranslatorFactory
 2269 [main] INFO  c.e.t.f.FamilyBankApplication - Interest accounted.
+254  [main] INFO  o.s.t.c.s.DefaultTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.epam.training.familybank.services.AccountServiceTest]
+270  [main] INFO  o.s.t.c.s.DefaultTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]
+270  [main] INFO  o.s.t.c.s.DefaultTestContextBootstrapper - Could not instantiate TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener]. Specify custom listener classes or make the default listener classes (and their required dependencies) available. Offending class: [javax/servlet/ServletContext]
+286  [main] INFO  o.s.t.c.s.DefaultTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@5a8e6209, org.springframework.test.context.support.DependencyInjectionTestExecutionListener@4b4523f8, org.springframework.test.context.support.DirtiesContextTestExecutionListener@731a74c, org.springframework.test.context.transaction.TransactionalTestExecutionListener@369f73a2, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@1f28c152]
+317  [main] ERROR o.s.test.context.TestContextManager - Caught exception while allowing TestExecutionListener [org.springframework.test.context.support.DependencyInjectionTestExecutionListener@4b4523f8] to prepare test instance [com.epam.training.familybank.services.AccountServiceTest@4bbfb90a]
+java.lang.IllegalStateException: Failed to load ApplicationContext
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:124)
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:83)
+	at org.springframework.test.context.support.DependencyInjectionTestExecutionListener.injectDependencies(DependencyInjectionTestExecutionListener.java:117)
+	at org.springframework.test.context.support.DependencyInjectionTestExecutionListener.prepareTestInstance(DependencyInjectionTestExecutionListener.java:83)
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:228)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.createTest(SpringJUnit4ClassRunner.java:230)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner$1.runReflectiveCall(SpringJUnit4ClassRunner.java:289)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.methodBlock(SpringJUnit4ClassRunner.java:291)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:249)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:89)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
+	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:193)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:86)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:539)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:761)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:461)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:207)
+Caused by: java.lang.IllegalArgumentException: Cannot load an ApplicationContext with a NULL 'contextLoader'. Consider annotating your test class with @ContextConfiguration or @ContextHierarchy.
+	at org.springframework.util.Assert.notNull(Assert.java:115)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:91)
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:116)
+	... 25 common frames omitted
+250  [main] INFO  o.s.t.c.s.DefaultTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]
+250  [main] INFO  o.s.t.c.s.DefaultTestContextBootstrapper - Could not instantiate TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener]. Specify custom listener classes or make the default listener classes (and their required dependencies) available. Offending class: [javax/servlet/ServletContext]
+265  [main] INFO  o.s.t.c.s.DefaultTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@59e5ddf, org.springframework.test.context.support.DependencyInjectionTestExecutionListener@536aaa8d, org.springframework.test.context.support.DirtiesContextTestExecutionListener@e320068, org.springframework.test.context.transaction.TransactionalTestExecutionListener@1f57539, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@76f2b07d]
+406  [main] INFO  o.s.c.s.GenericApplicationContext - Refreshing org.springframework.context.support.GenericApplicationContext@76a3e297: startup date [Sun Dec 31 14:48:25 CET 2017]; root of context hierarchy
+594  [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'springConfigurationDao' of type [class com.epam.training.familybank.spring.SpringConfigurationDao] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+719  [main] INFO  o.s.o.j.LocalEntityManagerFactoryBean - Building JPA EntityManagerFactory for persistence unit 'pu'
+828  [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [
+	name: pu
+	...]
+916  [main] INFO  org.hibernate.Version - HHH000412: Hibernate Core {5.1.0.Final}
+916  [main] INFO  org.hibernate.cfg.Environment - HHH000206: hibernate.properties not found
+916  [main] INFO  org.hibernate.cfg.Environment - HHH000021: Bytecode provider name : javassist
+947  [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.0.1.Final}
+1119 [main] WARN  org.hibernate.orm.connections - HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+1119 [main] INFO  org.hibernate.orm.connections - HHH10001005: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost/family_bank]
+1119 [main] INFO  org.hibernate.orm.connections - HHH10001001: Connection properties: {user=root, password=****}
+1119 [main] INFO  org.hibernate.orm.connections - HHH10001003: Autocommit mode: false
+1119 [main] INFO  o.h.e.j.c.i.DriverManagerConnectionProviderImpl - HHH000115: Hibernate connection pool size: 20 (min=1)
+1379 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQL5Dialect
+1942 [main] INFO  o.hibernate.tuple.PojoInstantiator - HHH000182: No default (no-argument) constructor for class: com.epam.training.familybank.domain.InterestRate (class must be instantiated by Interceptor)
+2001 [main] INFO  o.hibernate.tuple.PojoInstantiator - HHH000182: No default (no-argument) constructor for class: com.epam.training.familybank.domain.AccountType (class must be instantiated by Interceptor)
+2409 [Thread-1] INFO  o.s.c.s.GenericApplicationContext - Closing org.springframework.context.support.GenericApplicationContext@76a3e297: startup date [Sun Dec 31 14:48:25 CET 2017]; root of context hierarchy
+2456 [Thread-1] INFO  o.s.o.j.LocalEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'pu'
+2456 [Thread-1] INFO  org.hibernate.orm.connections - HHH10001008: Cleaning up connection pool [jdbc:mysql://localhost/family_bank]
+265  [main] INFO  o.s.t.c.s.DefaultTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]
+281  [main] INFO  o.s.t.c.s.DefaultTestContextBootstrapper - Could not instantiate TestExecutionListener [org.springframework.test.context.web.ServletTestExecutionListener]. Specify custom listener classes or make the default listener classes (and their required dependencies) available. Offending class: [javax/servlet/ServletContext]
+281  [main] INFO  o.s.t.c.s.DefaultTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@17579e0f, org.springframework.test.context.support.DependencyInjectionTestExecutionListener@4d41cee, org.springframework.test.context.support.DirtiesContextTestExecutionListener@3712b94, org.springframework.test.context.transaction.TransactionalTestExecutionListener@2833cc44, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@33f88ab]
+443  [main] INFO  o.s.c.s.GenericApplicationContext - Refreshing org.springframework.context.support.GenericApplicationContext@5ed828d: startup date [Mon Jan 01 14:25:59 CET 2018]; root of context hierarchy
+646  [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'springConfigurationDao' of type [class com.epam.training.familybank.spring.SpringConfigurationDao] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+787  [main] INFO  o.s.o.j.LocalEntityManagerFactoryBean - Building JPA EntityManagerFactory for persistence unit 'pu'
+942  [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [
+	name: pu
+	...]
+1041 [main] INFO  org.hibernate.Version - HHH000412: Hibernate Core {5.1.0.Final}
+1057 [main] INFO  org.hibernate.cfg.Environment - HHH000206: hibernate.properties not found
+1057 [main] INFO  org.hibernate.cfg.Environment - HHH000021: Bytecode provider name : javassist
+1088 [main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.0.1.Final}
+1276 [main] WARN  org.hibernate.orm.connections - HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+1276 [main] INFO  org.hibernate.orm.connections - HHH10001005: using driver [com.mysql.jdbc.Driver] at URL [jdbc:mysql://localhost/family_bank]
+1276 [main] INFO  org.hibernate.orm.connections - HHH10001001: Connection properties: {user=root, password=****}
+1276 [main] INFO  org.hibernate.orm.connections - HHH10001003: Autocommit mode: false
+1291 [main] INFO  o.h.e.j.c.i.DriverManagerConnectionProviderImpl - HHH000115: Hibernate connection pool size: 20 (min=1)
+1521 [main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQL5Dialect
+2084 [main] INFO  o.hibernate.tuple.PojoInstantiator - HHH000182: No default (no-argument) constructor for class: com.epam.training.familybank.domain.InterestRate (class must be instantiated by Interceptor)
+2124 [main] INFO  o.hibernate.tuple.PojoInstantiator - HHH000182: No default (no-argument) constructor for class: com.epam.training.familybank.domain.AccountType (class must be instantiated by Interceptor)
+2710 [Thread-1] INFO  o.s.c.s.GenericApplicationContext - Closing org.springframework.context.support.GenericApplicationContext@5ed828d: startup date [Mon Jan 01 14:25:59 CET 2018]; root of context hierarchy
+2726 [Thread-1] INFO  o.s.o.j.LocalEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'pu'
+2726 [Thread-1] INFO  org.hibernate.orm.connections - HHH10001008: Cleaning up connection pool [jdbc:mysql://localhost/family_bank]

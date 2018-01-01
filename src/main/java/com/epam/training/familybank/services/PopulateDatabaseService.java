@@ -50,7 +50,9 @@ public class PopulateDatabaseService {
     }
     
     private Account createAccount(User user, AccountType accountType, BigDecimal balance) {
-        Account account = new Account(user, accountType);
+        Account account = new Account();
+        account.setUser(user);
+        account.setAccountType(accountType);
         account.setBalance(balance);
         account.setInterestCalculatedDate(new Date());
         entityManager.persist(account);
