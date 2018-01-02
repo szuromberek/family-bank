@@ -50,31 +50,24 @@ public class FamilyBankTest
         User user1 = users.get(1);
         User user2 = users.get(2);
         
-//        testPutMoneyInBank(test, user0, 500);
-//        testPutMoneyInBank(test, user1, 500);
-//        testPutMoneyInBank(test, user2, 500);
-        
-        //testSendGift(test, user0, user1, 100);
-        
-//        testTakeMoneyOutOfBank(test, user0, 1500);
-//        testTakeMoneyOutOfBank(test, user1, 3900);
-//        testTakeMoneyOutOfBank(test, user2, 4000);
-        
-        //testIncreaseSavings(test, user0, 100);
-        //testIncreaseSavings(test, user1, 300);
-        
-          //testGetLoan(test, user2, 100);
-        //testGetLoan(test, user2, 400);
-        //testGetLoan(test, user2, 300);
-        
-        //testRepayLoan(test, user2, 50);
-
-        //testDecreaseSavings(test, user0, 100);
+        testPutMoneyInBank(test, user0, 500);
+        testPutMoneyInBank(test, user1, 500);
+        testPutMoneyInBank(test, user2, 500);
+        testSendGift(test, user0, user1, 100);
+        testTakeMoneyOutOfBank(test, user0, 100);
+        testTakeMoneyOutOfBank(test, user1, 300);
+        testTakeMoneyOutOfBank(test, user2, 400);
+        testIncreaseSavings(test, user0, 100);
+        testIncreaseSavings(test, user1, 300);
+        testGetLoan(test, user2, 100);
+        testRepayLoan(test, user2, 50);
+        testDecreaseSavings(test, user0, 100);
         testAccountInterest(test);
     }
 
     private static void testAccountInterest(FamilyBankTest test) throws ParseException {
-        test.interestService.accountCreditAndSavingsInterest();
+        Date now = new Date();
+        test.interestService.accountCreditAndSavingsInterest(now);
         LOGGER.info("Interest accounted.");
     }
 

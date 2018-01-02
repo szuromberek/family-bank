@@ -13,13 +13,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.epam.training.familybank.dao.jpaimpl.JpaAccountDao;
 import com.epam.training.familybank.domain.Account;
 import com.epam.training.familybank.domain.User;
 
-@Transactional
 public class AccountServiceTest {
     private JpaAccountDao mockJpaAccountDao;
     private AccountService underTest;
@@ -46,12 +44,12 @@ public class AccountServiceTest {
         User mockFromUser = mock(User.class);
         User mockToUser = mock(User.class);
         BigDecimal amountToSend = BigDecimal.valueOf(100);
-        BigDecimal firstUserBalance = BigDecimal.valueOf(500);
-        BigDecimal secondUserBalance = BigDecimal.ZERO;
+        BigDecimal fromUserBalance = BigDecimal.valueOf(200);
+        BigDecimal toUserBalance = BigDecimal.ZERO;
         when(mockJpaAccountDao.queryCurrentAccountByUser(mockFromUser)).thenReturn(mockFromAccount);
         when(mockJpaAccountDao.queryCurrentAccountByUser(mockToUser)).thenReturn(mockToAccount);
-        when(mockFromAccount.getBalance()).thenReturn(firstUserBalance);
-        when(mockToAccount.getBalance()).thenReturn(secondUserBalance);
+        when(mockFromAccount.getBalance()).thenReturn(fromUserBalance);
+        when(mockToAccount.getBalance()).thenReturn(toUserBalance);
         
         // When
         underTest.sendGift(mockFromUser, mockToUser, amountToSend);
@@ -226,15 +224,15 @@ public class AccountServiceTest {
         Account mockCurrentAccount = mock(Account.class);
         Account mockSavingsAccount = mock(Account.class);
         User mockUser = mock(User.class);
-        BigDecimal amountAvailable = BigDecimal.valueOf(500);
-        BigDecimal amountSaved = BigDecimal.ZERO;
+        BigDecimal currentAccountBalance = BigDecimal.valueOf(500);
+        BigDecimal savingsAccountBalance = BigDecimal.ZERO;
         BigDecimal amountToSave = BigDecimal.valueOf(100);
-        BigDecimal newCurrentBalance = amountAvailable.subtract(amountToSave);
-        BigDecimal newSavingsBalance = amountAvailable.add(amountToSave);
+        BigDecimal newCurrentBalance = currentAccountBalance.subtract(amountToSave);
+        BigDecimal newSavingsBalance = savingsAccountBalance.add(amountToSave);
         when(mockJpaAccountDao.queryCurrentAccountByUser(mockUser)).thenReturn(mockCurrentAccount);
         when(mockJpaAccountDao.querySavingsAccountByUser(mockUser)).thenReturn(mockSavingsAccount);
-        when(mockCurrentAccount.getBalance()).thenReturn(amountAvailable);
-        when(mockSavingsAccount.getBalance()).thenReturn(amountSaved);
+        when(mockCurrentAccount.getBalance()).thenReturn(currentAccountBalance);
+        when(mockSavingsAccount.getBalance()).thenReturn(savingsAccountBalance);
         
         // When
         underTest.increaseSavings(mockUser, amountToSave);
@@ -250,15 +248,15 @@ public class AccountServiceTest {
         Account mockCurrentAccount = mock(Account.class);
         Account mockSavingsAccount = mock(Account.class);
         User mockUser = mock(User.class);
-        BigDecimal amountAvailable = BigDecimal.valueOf(500);
-        BigDecimal amountSaved = BigDecimal.ZERO;
-        BigDecimal amountToDecreaseSavingsBy = BigDecimal.valueOf(100);
-        BigDecimal newCurrentBalance = amountAvailable.add(amountToDecreaseSavingsBy);
-        BigDecimal newSavingsBalance = amountAvailable.subtract(amountToDecreaseSavingsBy);
+        BigDecimal currentAccountBalance = BigDecimal.ZERO;
+        BigDecimal savingsAccountBalance = new BigDecimal(200);
+        BigDecimal amountToDecreaseSavingsBy = new BigDecimal(100);
+        BigDecimal newCurrentBalance = currentAccountBalance.add(amountToDecreaseSavingsBy);
+        BigDecimal newSavingsBalance = savingsAccountBalance.subtract(amountToDecreaseSavingsBy);
         when(mockJpaAccountDao.queryCurrentAccountByUser(mockUser)).thenReturn(mockCurrentAccount);
         when(mockJpaAccountDao.querySavingsAccountByUser(mockUser)).thenReturn(mockSavingsAccount);
-        when(mockCurrentAccount.getBalance()).thenReturn(amountAvailable);
-        when(mockSavingsAccount.getBalance()).thenReturn(amountSaved);
+        when(mockCurrentAccount.getBalance()).thenReturn(currentAccountBalance);
+        when(mockSavingsAccount.getBalance()).thenReturn(savingsAccountBalance);
         
         // When
         underTest.decreaseSavings(mockUser, amountToDecreaseSavingsBy);

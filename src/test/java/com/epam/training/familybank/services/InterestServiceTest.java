@@ -13,7 +13,6 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import com.epam.training.familybank.dao.jpaimpl.JpaAccountDao;
 import com.epam.training.familybank.domain.Account;
@@ -43,11 +42,14 @@ public class InterestServiceTest {
         List<Account> savingsAccounts = new ArrayList<>();
         creditAccounts.add(mockCreditAccount);
         savingsAccounts.add(mockSavingsAccount);
-        BigDecimal creditBalance = BigDecimal.valueOf(100);
-        BigDecimal savingsBalance = BigDecimal.valueOf(100);
+        BigDecimal creditBalance = new BigDecimal("100");
+        BigDecimal creditBalanceWithInterest = new BigDecimal("100.200");
+        BigDecimal savingsBalance = new BigDecimal("100");
+        BigDecimal savingsBalanceWithInterest = new BigDecimal("100.100");
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
         Date dateMinus1Day = cal.getTime();
+        Date now = new Date();
         when(mockJpaAccountDao.queryAccountsByType(AccountType.CREDIT)).thenReturn(creditAccounts);
         when(mockJpaAccountDao.queryAccountsByType(AccountType.SAVINGS)).thenReturn(savingsAccounts);
         when(mockCreditAccount.getBalance()).thenReturn(creditBalance);
@@ -56,12 +58,13 @@ public class InterestServiceTest {
         when(mockSavingsAccount.getInterestCalculatedDate()).thenReturn(dateMinus1Day);
         
         // When
-        underTest.accountCreditAndSavingsInterest();
+        underTest.accountCreditAndSavingsInterest(now);
         
         // Then
-        verify(mockJpaAccountDao).updateBalance(mockCreditAccount, BigDecimal.valueOf(Mockito.anyDouble());
-        verify(mockJpaAccountDao).updateBalance(mockSavingsAccount, BigDecimal.valueOf(Mockito.anyDouble()));
-        verify(mockJpaAccountDao).updateInterestCalculatedDate(mockCreditAccount, new Date());
-        verify(mockJpaAccountDao).updateInterestCalculatedDate(mockSavingsAccount, new Date());
+        verify(mockJpaAccountDao).updateBalance(mockSavingsAccount, savingsBalanceWithInterest);
+        verify(mockJpaAccountDao).updateInterestCalculatedDate(mockSavingsAccount, now);
+        verify(mockJpaAccountDao).updateBalance(mockCreditAccount, creditBalanceWithInterest);
+        verify(mockJpaAccountDao).updateInterestCalculatedDate(mockCreditAccount, now);
+        
     }
 }

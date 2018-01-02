@@ -5,8 +5,6 @@ import java.math.BigDecimal;
 import javax.annotation.Resource;
 
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.epam.training.familybank.dao.jpaimpl.JpaAccountDao;
 import com.epam.training.familybank.domain.Account;
@@ -25,7 +23,7 @@ public class AccountService {
     public void sendGift(User fromUser, User toUser, BigDecimal amount) {
         Account fromAccount = getCurrentAccount(fromUser);
         Account toAccount = getCurrentAccount(toUser);
-        transferFundsBetweenAccounts(toAccount, fromAccount, amount);
+        transferFundsBetweenAccounts(fromAccount, toAccount, amount);
     }
 
     public void putMoneyInBank(User user, BigDecimal amount) {
@@ -61,10 +59,8 @@ public class AccountService {
     }
 
     private void transferFundsBetweenAccounts(Account fromAccount, Account toAccount, BigDecimal amount) {
-        TransactionStatus status = txManager.getTransaction(new DefaultTransactionDefinition());
         decreaseBalanceByAmount(fromAccount, amount);
         increaseBalanceByAmount(toAccount, amount);
-        txManager.commit(status);
     }
     
     private void increaseBalanceByAmount(Account account, BigDecimal amount) {

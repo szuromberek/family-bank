@@ -73,8 +73,8 @@ public class JpaAccountDao extends GenericJpaDao implements AccountDao {
 
     public void updateInterestCalculatedDate(Account account, Date date) {
         entityManager
-        .createQuery("update Account a set a.interestCalculatedDate = :now where a.id = :accountId")
-        .setParameter("now", date)
+        .createQuery("update Account a set a.interestCalculatedDate = :date where a.id = :accountId")
+        .setParameter("date", date)
         .setParameter("accountId", account.getId())
         .executeUpdate();
     }
